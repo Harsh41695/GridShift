@@ -107,4 +107,25 @@ public class GridModel
 
         return result;
     }
+
+    public void UndoMove(MoveResult move)
+    {
+        PlayerPosition = move.PlayerFrom;
+
+        if (move.BoxMoved)
+        {
+            RemoveBox(move.BoxTo);
+            AddBox(move.BoxFrom);
+        }
+    }
+    public bool IsLevelComplete()
+    {
+        foreach (Vector2Int boxPosition in boxPositions)
+        {
+            if (GetCell(boxPosition) != CellType.Goal)
+                return false;
+        }
+
+        return boxPositions.Count > 0;
+    }
 }

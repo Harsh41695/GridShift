@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 public class InputController : MonoBehaviour
 {
     public event Action<Vector2Int> OnMove;
-
+    public event Action OnUndo;
     private InputSystem_Actions inputActions;
 
     private void Awake()
@@ -16,12 +16,15 @@ public class InputController : MonoBehaviour
     private void OnEnable()
     {
         inputActions.Player.Move.performed += HandleMove;
+        inputActions.Player.Undo.performed += HandleUndo;
         inputActions.Player.Enable();
     }
 
     private void OnDisable()
     {
         inputActions.Player.Move.performed -= HandleMove;
+        inputActions.Player.Undo.performed -= HandleUndo;
+
         inputActions.Player.Disable();
     }
 
@@ -50,5 +53,9 @@ public class InputController : MonoBehaviour
         }
 
         OnMove?.Invoke(direction);
+    }
+    private void HandleUndo(InputAction.CallbackContext context)
+    {
+        OnUndo?.Invoke();
     }
 }
