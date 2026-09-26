@@ -6,6 +6,7 @@ public class InputController : MonoBehaviour
 {
     public event Action<Vector2Int> OnMove;
     public event Action OnUndo;
+    public event Action OnRestart;
     private InputSystem_Actions inputActions;
 
     private void Awake()
@@ -17,6 +18,8 @@ public class InputController : MonoBehaviour
     {
         inputActions.Player.Move.performed += HandleMove;
         inputActions.Player.Undo.performed += HandleUndo;
+        inputActions.Player.Restart.performed += HandleRestart;
+
         inputActions.Player.Enable();
     }
 
@@ -24,6 +27,7 @@ public class InputController : MonoBehaviour
     {
         inputActions.Player.Move.performed -= HandleMove;
         inputActions.Player.Undo.performed -= HandleUndo;
+        inputActions.Player.Restart.performed += HandleRestart;
 
         inputActions.Player.Disable();
     }
@@ -57,5 +61,9 @@ public class InputController : MonoBehaviour
     private void HandleUndo(InputAction.CallbackContext context)
     {
         OnUndo?.Invoke();
+    }
+    void HandleRestart(InputAction.CallbackContext context)
+    {
+        OnRestart?.Invoke();
     }
 }

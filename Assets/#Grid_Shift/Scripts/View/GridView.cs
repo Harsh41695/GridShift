@@ -94,4 +94,15 @@ public class GridView : MonoBehaviour
 
         box.transform.position = GridToWorld(to);
     }
+
+    public void Clear()
+    {
+        foreach (Transform child in transform)
+        {
+            Destroy(child.gameObject);
+        }
+
+        boxObjects.Clear();
+        playerObject = null;
+    }
 }

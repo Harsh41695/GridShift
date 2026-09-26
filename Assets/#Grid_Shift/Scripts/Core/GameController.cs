@@ -9,8 +9,9 @@ public class GameController : MonoBehaviour
 
     [SerializeField] private InputController inputController;
     private MoveHistory moveHistory;
+    [SerializeField] private GameplayUI gameplayUI;
 
-   
+
     private void Start()
     {
         moveHistory = new MoveHistory();
@@ -20,6 +21,7 @@ public class GameController : MonoBehaviour
     {
         inputController.OnMove += HandleMove;
         inputController.OnUndo += HandleUndo;
+        inputController.OnRestart += RestartLevel;
 
     }
 
@@ -27,6 +29,7 @@ public class GameController : MonoBehaviour
     {
         inputController.OnMove -= HandleMove;
         inputController.OnUndo -= HandleUndo;
+        inputController.OnRestart -= RestartLevel;
     }
     private void CreateLevel()
     {
@@ -76,14 +79,14 @@ public class GameController : MonoBehaviour
             );
         }
 
-        Debug.Log($"Moves: {moveHistory.MoveCount}");
+        gameplayUI.UpdateMoveCount(moveHistory.MoveCount);
 
         if (gridModel.IsLevelComplete())
         {
-            Debug.Log("LEVEL COMPLETE!");
+            gameplayUI.ShowWin();
         }
     }
-    private void HandleUndo()
+    public void HandleUndo()
     {
         if (!moveHistory.TryUndo(out MoveResult move))
             return;
@@ -100,6 +103,17 @@ public class GameController : MonoBehaviour
             );
         }
 
-        Debug.Log($"Moves: {moveHistory.MoveCount}");
+        gameplayUI.UpdateMoveCount(moveHistory.MoveCount);
+    }
+    public void RestartLevel()
+    {
+        moveHistory.Clear();
+
+        gridView.Clear();
+
+        CreateLevel();
+
+        gameplayUI.UpdateMoveCount(0);
+        gameplayUI.HideWin();
     }
 }
