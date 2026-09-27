@@ -1,5 +1,5 @@
+using System.Collections;
 using UnityEngine;
-
 public class GameController : MonoBehaviour
 {
     [Header("Levels")]
@@ -17,6 +17,9 @@ public class GameController : MonoBehaviour
     private MoveHistory moveHistory;
 
     private bool levelComplete;
+    private bool isAnimating;
+
+    [SerializeField] private float moveAnimationDuration = 0.15f;
 
 
     private void Start()
@@ -73,12 +76,19 @@ public class GameController : MonoBehaviour
             CurrentLevel.PlayerStartPosition
         );
 
+        foreach (Vector2Int position in CurrentLevel.ConveyorRightPositions)
+        {
+            gridModel.AddRightConveyor(position);
+        }
+
         gridView.Build(gridModel);
     }
 
 
     private void LoadLevel()
     {
+        StopAllCoroutines();
+        isAnimating = false;
         levelComplete = false;
 
         moveHistory.Clear();
@@ -94,7 +104,7 @@ public class GameController : MonoBehaviour
 
     private void HandleMove(Vector2Int direction)
     {
-        if (levelComplete)
+        if (levelComplete || isAnimating)
             return;
 
         MoveResult result =
@@ -102,6 +112,8 @@ public class GameController : MonoBehaviour
 
         if (!result.Success)
             return;
+
+        isAnimating = true;
 
         moveHistory.Record(result);
 
@@ -111,10 +123,24 @@ public class GameController : MonoBehaviour
 
         if (result.BoxMoved)
         {
-            gridView.UpdateBoxPosition(
-                result.BoxFrom,
-                result.BoxTo
-            );
+            if (result.UsedConveyor)
+            {
+                Vector2Int conveyorPosition =
+                    result.BoxTo + Vector2Int.left;
+
+                gridView.UpdateBoxPositionWithConveyor(
+                    result.BoxFrom,
+                    conveyorPosition,
+                    result.BoxTo
+                );
+            }
+            else
+            {
+                gridView.UpdateBoxPosition(
+                    result.BoxFrom,
+                    result.BoxTo
+                );
+            }
         }
 
         gameplayUI.UpdateMoveCount(
@@ -122,15 +148,29 @@ public class GameController : MonoBehaviour
         );
 
         CheckLevelComplete();
+
+        StartCoroutine(
+     UnlockInputAfterMovement(
+         result.UsedConveyor ? 0.35f : moveAnimationDuration
+     )
+ );
     }
 
+    private IEnumerator UnlockInputAfterMovement(float duration)
+    {
+        yield return new WaitForSeconds(duration);
+
+        isAnimating = false;
+    }
     public void HandleUndo()
     {
-        if (levelComplete)
+        if (levelComplete || isAnimating)
             return;
 
         if (!moveHistory.TryUndo(out MoveResult move))
             return;
+
+        isAnimating = true;
 
         gridModel.UndoMove(move);
 
@@ -149,8 +189,9 @@ public class GameController : MonoBehaviour
         gameplayUI.UpdateMoveCount(
             moveHistory.MoveCount
         );
-    }
 
+        StartCoroutine(UnlockInputAfterMovement(moveAnimationDuration));
+    }
 
 
     private void CheckLevelComplete()

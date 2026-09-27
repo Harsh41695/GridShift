@@ -14,6 +14,9 @@ public class GridModel
 
     public Vector2Int PlayerPosition { get; private set; }
 
+    private readonly HashSet<Vector2Int> conveyorRightPositions
+    = new HashSet<Vector2Int>();
+
     public GridModel(int width, int height)
     {
         this.width = width;
@@ -68,7 +71,8 @@ public class GridModel
             Success = false,
             PlayerFrom = PlayerPosition,
             PlayerTo = PlayerPosition,
-            BoxMoved = false
+            BoxMoved = false,
+            UsedConveyor = false
         };
 
         Vector2Int targetPosition = PlayerPosition + direction;
@@ -81,7 +85,8 @@ public class GridModel
 
         if (HasBox(targetPosition))
         {
-            Vector2Int boxTargetPosition = targetPosition + direction;
+            Vector2Int boxTargetPosition =
+                targetPosition + direction;
 
             if (!IsInside(boxTargetPosition))
                 return result;
@@ -92,12 +97,35 @@ public class GridModel
             if (HasBox(boxTargetPosition))
                 return result;
 
+            Vector2Int finalBoxPosition = boxTargetPosition;
+
+           
+
+            if (IsRightConveyor(boxTargetPosition))
+            {
+                Vector2Int conveyorTarget =
+                    boxTargetPosition + Vector2Int.right;
+
+                bool canMoveRight =
+                    IsInside(conveyorTarget) &&
+                    GetCell(conveyorTarget) != CellType.Wall &&
+                    !HasBox(conveyorTarget);
+
+                if (canMoveRight)
+                {
+                    finalBoxPosition = conveyorTarget;
+                    result.UsedConveyor = true;
+                }
+            }
+
             RemoveBox(targetPosition);
-            AddBox(boxTargetPosition);
+            AddBox(finalBoxPosition);
 
             result.BoxMoved = true;
+
             result.BoxFrom = targetPosition;
-            result.BoxTo = boxTargetPosition;
+
+            result.BoxTo = finalBoxPosition;
         }
 
         PlayerPosition = targetPosition;
@@ -127,5 +155,15 @@ public class GridModel
         }
 
         return boxPositions.Count > 0;
+    }
+
+    public void AddRightConveyor(Vector2Int position)
+    {
+        conveyorRightPositions.Add(position);
+    }
+
+    public bool IsRightConveyor(Vector2Int position)
+    {
+        return conveyorRightPositions.Contains(position);
     }
 }

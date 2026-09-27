@@ -20,4 +20,9 @@ public class LevelData : ScriptableObject
     public Vector2Int[] WallPositions => wallPositions;
     public Vector2Int[] GoalPositions => goalPositions;
     public Vector2Int[] BoxPositions => boxPositions;
+
+    [SerializeField] private Vector2Int[] conveyorRightPositions;
+
+    public Vector2Int[] ConveyorRightPositions =>
+        conveyorRightPositions;
 }

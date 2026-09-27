@@ -40,4 +40,6 @@ MonoBehaviour:
   goalPositions:
   - {x: 4, y: 4}
   boxPositions:
-  - {x: 2, y: 3}
+  - {x: 1, y: 2}
+  conveyorRightPositions:
+  - {x: 1, y: 3}

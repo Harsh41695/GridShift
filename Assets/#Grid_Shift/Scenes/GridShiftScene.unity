@@ -520,6 +520,7 @@ MonoBehaviour:
   goalPrefab: {fileID: 7842879102385604516, guid: fddf9777e530be54e9f3b0c43e374a02, type: 3}
   playerPrefab: {fileID: 7823376581313401473, guid: f05e52c4767958242a74552267f80d0d, type: 3}
   boxPrefab: {fileID: 4907835707206758147, guid: 3f7980ecc05aaa741911d86e538518d7, type: 3}
+  conveyorRightPrefab: {fileID: 7253594606539214358, guid: c1403f53c536ea4438b46c40b96f61dd, type: 3}
   cellSize: 1.05
 --- !u!1 &712957841
 GameObject:
@@ -1832,7 +1833,7 @@ Transform:
   m_GameObject: {fileID: 1993835715}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2, y: 2, z: -10}
+  m_LocalPosition: {x: 2, y: 3, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

@@ -10,4 +10,5 @@ public struct MoveResult
     public bool BoxMoved;
     public Vector2Int BoxFrom;
     public Vector2Int BoxTo;
+    public bool UsedConveyor;
 }
