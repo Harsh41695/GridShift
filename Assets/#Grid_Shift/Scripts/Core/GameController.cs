@@ -211,18 +211,26 @@ public class GameController : MonoBehaviour
         LoadLevel();
     }
 
+    public void RestartGame()
+    {
+        currentLevelIndex = 0;
 
+        gameplayUI.HideGameComplete();
+
+        LoadLevel();
+    }
 
     public void NextLevel()
     {
         if (currentLevelIndex < levels.Length - 1)
         {
             currentLevelIndex++;
-
             LoadLevel();
         }
         else
         {
+            gameplayUI.ShowGameComplete();
+
             Debug.Log("GAME COMPLETE!");
         }
     }

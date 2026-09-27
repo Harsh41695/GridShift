@@ -4,7 +4,10 @@ using UnityEngine;
 public class GameplayUI : MonoBehaviour
 {
     [SerializeField] private TMP_Text movesText;
-    [SerializeField] private GameObject winPanel;
+
+    [Header("Popups")]
+    [SerializeField] private PopupAnimation winPanel;
+    [SerializeField] private PopupAnimation gameCompletePanel;
 
     public void UpdateMoveCount(int moveCount)
     {
@@ -13,11 +16,22 @@ public class GameplayUI : MonoBehaviour
 
     public void ShowWin()
     {
-        winPanel.SetActive(true);
+        winPanel.Show();
     }
 
     public void HideWin()
     {
-        winPanel.SetActive(false);
+        winPanel.gameObject.SetActive(false);
+    }
+
+    public void ShowGameComplete()
+    {
+        winPanel.gameObject.SetActive(false);
+        gameCompletePanel.Show();
+    }
+
+    public void HideGameComplete()
+    {
+        gameCompletePanel.gameObject.SetActive(false);
     }
 }
