@@ -16,6 +16,8 @@ public class InputController : MonoBehaviour
     private Vector2 swipeStartPosition;
     private bool isSwiping;
 
+    private bool inputEnabled = false;
+
     private void Awake()
     {
         inputActions = new InputSystem_Actions();
@@ -39,6 +41,11 @@ public class InputController : MonoBehaviour
         inputActions.Player.Disable();
     }
 
+    public void EnableGameplayInput()
+    {
+        inputEnabled = true;
+    }
+
     private void OnDestroy()
     {
         inputActions.Dispose();
@@ -52,6 +59,10 @@ public class InputController : MonoBehaviour
     // Keyboard / Gamepad
     private void HandleMove(InputAction.CallbackContext context)
     {
+
+        if (!inputEnabled)
+            return;
+
         Vector2 input = context.ReadValue<Vector2>();
 
         Vector2Int direction;
@@ -75,6 +86,9 @@ public class InputController : MonoBehaviour
     // Mobile Swipe
     private void HandleSwipe()
     {
+        if (!inputEnabled)
+            return;
+
         if (Touchscreen.current == null)
             return;
 

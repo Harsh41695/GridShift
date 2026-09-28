@@ -8,6 +8,7 @@ public class GameplayUI : MonoBehaviour
     [Header("Popups")]
     [SerializeField] private PopupAnimation winPanel;
     [SerializeField] private PopupAnimation gameCompletePanel;
+    [SerializeField] private GameObject instructionPanel;
 
     public void UpdateMoveCount(int moveCount)
     {
@@ -33,5 +34,15 @@ public class GameplayUI : MonoBehaviour
     public void HideGameComplete()
     {
         gameCompletePanel.gameObject.SetActive(false);
+    }
+
+    public void ShowInstructions()
+    {
+        instructionPanel.SetActive(true);
+    }
+
+    public void HideInstructions()
+    {
+        instructionPanel.SetActive(false);
     }
 }

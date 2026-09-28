@@ -201,6 +201,13 @@ public class GameController : MonoBehaviour
 
         levelComplete = true;
 
+        StartCoroutine(ShowWinAfterDelay());
+    }
+
+    private IEnumerator ShowWinAfterDelay()
+    {
+        yield return new WaitForSeconds(0.6f);
+
         gameplayUI.ShowWin();
     }
 
